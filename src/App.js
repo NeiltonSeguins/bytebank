@@ -1,25 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import estilos from './App.module.css';
+import { calculaNovoSaldo } from './utils';
 
-function App() {
+import Cabecalho from './componentes/Cabecalho';
+import Extrato from './componentes/Extrato';
+import Menu from './componentes/Menu';
+import Principal from './componentes/Principal';
+import Transacao from './componentes/Transacao';
+
+export default function App() {
+  const [saldo, setSaldo] = useState(1000);
+  const [transacoes, setTransacoes] = useState([]);
+
+  function realizarTransacao(valores) {
+    const novoSaldo = calculaNovoSaldo(valores, saldo);
+    setSaldo(novoSaldo);
+    setTransacoes([...transacoes, valores]);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Cabecalho />
+      <main className={estilos.container}>
+        <Menu />
+        <div className={estilos.wrapper}>
+          <Principal saldo={saldo} />
+          <Transacao realizarTransacao={realizarTransacao} />
+        </div>
+        <Extrato transacoes={transacoes} />
+      </main>
+    </>
   );
 }
 
-export default App;
